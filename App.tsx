@@ -8,7 +8,6 @@ import { AppSettings, GeneratedPrompt, AspectRatio } from './types';
 import useLocalStorage from './hooks/useLocalStorage';
 import { DEFAULT_SETTINGS, TEXT_MODELS, IMAGE_MODELS } from './constants';
 import { generateViralPrompt, generateThumbnail } from './services/openRouterService';
-import { generateViralPromptWithGemini, generateThumbnailWithGemini } from './services/geminiService';
 
 const App: React.FC = () => {
   const [settings, setSettings] = useLocalStorage<AppSettings>('prompt_builder_settings', DEFAULT_SETTINGS);
@@ -33,6 +32,16 @@ const App: React.FC = () => {
       document.documentElement.classList.remove('dark');
     }
   }, [settings.theme]);
+  
+  // Validate stored model preferences against current model list
+  useEffect(() => {
+    if (!TEXT_MODELS.some(m => m.id === textModel)) {
+      setTextModel(TEXT_MODELS[0].id);
+    }
+    if (!IMAGE_MODELS.some(m => m.id === imageModel)) {
+      setImageModel(IMAGE_MODELS[0].id);
+    }
+  }, [textModel, imageModel, setTextModel, setImageModel]);
   
   // Proactively open modal if a paid model is selected without a key
   useEffect(() => {
@@ -74,22 +83,12 @@ const App: React.FC = () => {
     try {
       const currentTopic = isRemix && generatedPrompt ? generatedPrompt.prompt : topic;
       
-      let promptData: GeneratedPrompt;
-      if (textModel.startsWith('gemini/')) {
-        promptData = await generateViralPromptWithGemini(textModel, settings, currentTopic, imageFile);
-      } else {
-        promptData = await generateViralPrompt(openrouterApiKey, textModel, settings, currentTopic, imageFile);
-      }
+      const promptData = await generateViralPrompt(openrouterApiKey, textModel, settings, currentTopic, imageFile);
       setGeneratedPrompt(promptData);
       setIsOutputModalOpen(true); // Open modal on success
       
       // Generate thumbnail after prompt is generated
-      let thumbUrl: string;
-      if (imageModel.startsWith('gemini/')) {
-        thumbUrl = await generateThumbnailWithGemini(imageModel, promptData.prompt);
-      } else {
-        thumbUrl = await generateThumbnail(openrouterApiKey, imageModel, promptData.prompt, settings.ratio as AspectRatio);
-      }
+      const thumbUrl = await generateThumbnail(openrouterApiKey, imageModel, promptData.prompt, settings.ratio as AspectRatio);
       setThumbnailUrl(thumbUrl);
 
     } catch (e: any) {

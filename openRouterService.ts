@@ -100,6 +100,7 @@ export const generateViralPrompt = async (
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userMessageContent }
       ],
+      response_format: { type: "json_object" }
     }),
   });
   
@@ -109,7 +110,7 @@ export const generateViralPrompt = async (
     let errorMessage = `Failed to generate prompt. Status: ${response.status}`;
     try {
       const errorData = JSON.parse(responseText);
-      console.error("OpenRouter API Error (JSON):", JSON.stringify(errorData, null, 2));
+      console.error("OpenRouter API Error (JSON):", errorData);
       errorMessage = `${errorMessage}: ${extractErrorMessage(errorData)}`;
     } catch (e) {
       console.error("OpenRouter API Error (Text):", responseText);
@@ -156,7 +157,7 @@ export const generateThumbnail = async (
       case '9:16': payload.size = '1024x1792'; break;
       default: payload.size = '1024x1024'; break;
     }
-  } else if (model.startsWith('stability-ai/stable-diffusion-3')) {
+  } else if (model === 'stability-ultra') {
     payload.n = 1;
     payload.response_format = 'b64_json';
     payload.aspect_ratio = aspectRatio;
@@ -193,7 +194,7 @@ export const generateThumbnail = async (
     let errorMessage = `Failed to generate thumbnail. Status: ${response.status}`;
     try {
       const errorData = JSON.parse(responseText);
-      console.error("OpenRouter Image API Error (JSON):", JSON.stringify(errorData, null, 2));
+      console.error("OpenRouter Image API Error (JSON):", errorData);
       errorMessage = `${errorMessage}: ${extractErrorMessage(errorData)}`;
     } catch (e) {
       console.error("OpenRouter Image API Error (Text):", responseText);

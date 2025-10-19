@@ -51,7 +51,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           {models.filter(m => m.type === 'free').map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
         </optgroup>
         <optgroup label="Paid Models">
-          {models.filter(m => m.type === 'paid').map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
+          {models.filter(m => m.type === 'paid').map(m => <option key={m.id} value={m.id}>{m.name} ($)</option>)}
         </optgroup>
       </select>
     </div>
