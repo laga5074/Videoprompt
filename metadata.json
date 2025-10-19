@@ -1,0 +1,5 @@
+{
+  "name": "AI Viral Video Prompt Builder",
+  "description": "A self-contained web app that uses AI to generate cinematic, viral-optimized video prompts for text-to-video models like Sora 2 Pro or Veo 3. It reads or generates reference images, follows storytelling rules, and injects professional directorial cues.",
+  "requestFramePermissions": []
+}
