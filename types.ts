@@ -26,6 +26,7 @@ export interface GeneratedPrompt {
 export interface ModelOption {
   id: string;
   name: string;
+  provider: 'google' | 'openrouter';
 }
 
 export type Theme = 'light' | 'dark';
