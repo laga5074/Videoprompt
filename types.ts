@@ -26,7 +26,6 @@ export interface GeneratedPrompt {
 export interface ModelOption {
   id: string;
   name: string;
-  type: 'free' | 'paid';
 }
 
 export type Theme = 'light' | 'dark';

@@ -18,14 +18,13 @@ const getFileMimeType = (file: File): string => {
     return file.type;
 }
 
-export const generateViralPromptWithGemini = async (
+export const generateViralPrompt = async (
   model: string,
   settings: AppSettings,
   topic: string,
   imageFile?: File | null
 ): Promise<GeneratedPrompt> => {
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-  const geminiModel = model.replace('gemini/', ''); 
 
   const promptSegments = [
     `You are an expert director and viral content creator, specialized in generating prompts for advanced text-to-video models like Sora 2 Pro and Veo 3.`,
@@ -73,7 +72,7 @@ export const generateViralPromptWithGemini = async (
 
   try {
     const response = await ai.models.generateContent({
-      model: geminiModel,
+      model: model,
       contents: { parts: parts },
       config: {
         systemInstruction: systemInstruction,
@@ -94,18 +93,17 @@ export const generateViralPromptWithGemini = async (
   }
 };
 
-export const generateThumbnailWithGemini = async (
+export const generateThumbnail = async (
   model: string,
   prompt: string,
 ): Promise<string> => {
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-  const geminiModel = model.replace('gemini/', '');
 
   const imagePrompt = `Create a visually stunning, ultra-realistic, cinematic thumbnail for a viral video. The scene is: ${prompt}. Emphasize the hook of the story.`;
 
   try {
     const response = await ai.models.generateContent({
-        model: geminiModel,
+        model: model,
         contents: {
             parts: [{ text: imagePrompt }],
         },
